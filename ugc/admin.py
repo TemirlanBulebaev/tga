@@ -12,3 +12,5 @@ class ProfileAdmin(admin.ModelAdmin):
 class MessageAdmin(admin.ModelAdmin):
     list_display = ('id', 'profile', 'text', 'created_at')
 
+    def get_queryset(self, request):
+        return

@@ -9,8 +9,9 @@ from telegram.ext import MessageHandler
 from telegram.ext import Updater
 from telegram.utils.request import Request
 
-from ugc.models import Message
+
 from ugc.models import Profile
+from ugc.models import Message
 
 def log_errors(f):
     def inner(*args, **kwargs):
@@ -20,12 +21,19 @@ def log_errors(f):
             error_message = f'Произошла ошибка: {e}'
             print(error_message)
             raise e
-    return inner()
+    return inner
 
 @log_errors
 def do_echo(update: Update, context: CallbackContext):
     chat_id = update.message.chat_id
     text = update.message.text
+
+    p, _ = Profile.objects.get_or_create(
+        external_id=chat_id,
+        defaults={
+            'name': update.message.from_user.username,
+        }
+    )
 
     reply_text = 'Ваш ID = {}\n\n{}'.format(chat_id, text)
     update.message.reply_text(

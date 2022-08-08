@@ -1,7 +1,10 @@
 from django.db import models
 
 class Profile(models.Model): # Модель для профилей
-    external_id = models.PositiveIntegerField(verbose_name='ID пользователя')
+    external_id = models.PositiveIntegerField(
+        verbose_name='ID пользователя',
+        unique=True,
+    )
     name = models.TextField(verbose_name='Имя пользователя')
 
     def __str__(self):# Человекочитаемое описание для данного объекта
@@ -13,10 +16,10 @@ class Profile(models.Model): # Модель для профилей
 
 
 class Message(models.Model):# Модель для сообщений
-    profile = models.ForeignKey( # Связь с внешней таблицей
-        to='ugc.Profile',# Исключение циклических импортов
+    profile = models.ForeignKey(
+        to='ugc.Profile',
         verbose_name='Профиль',
-        on_delete=models.PROTECT,# Инструкция по удалению профиля, к которому привязаны сообщения - запрещает
+        on_delete=models.PROTECT,
     )
     text = models.TextField(
         verbose_name='Текст',
